@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>{% block title %}Sistema de Atendimento{% endblock %}</title>
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='css/style.css') }}"
+    >
+</head>
+
+<body>
+
+<header class="topbar">
+    <div class="container topbar-content">
+        <div>
+            <h1>Fila de Atendimento</h1>
+            <span class="subtitle">Gerenciamento de clientes</span>
+        </div>
+
+        <nav>
+            <a href="{{ url_for('index') }}">Fila</a>
+            <a href="{{ url_for('historico') }}">Histórico</a>
+        </nav>
+    </div>
+</header>
+
+<main class="container">
+    {% block content %}{% endblock %}
+</main>
+
+<script src="{{ url_for('static', filename='js/app.js') }}"></script>
+
+{% block scripts %}{% endblock %}
+
+</body>
+</html>

@@ -1,0 +1,164 @@
+{% extends "base.html" %}
+
+{% block title %}
+Fila de Atendimento
+{% endblock %}
+
+{% block content %}
+
+<section class="dashboard">
+
+    <div class="stat-card blue">
+        <span>Aguardando</span>
+        <strong id="total-aguardando">0</strong>
+    </div>
+
+    <div class="stat-card orange">
+        <span>Em atendimento</span>
+        <strong id="total-atendimento">0</strong>
+    </div>
+
+    <div class="stat-card green">
+        <span>Concluídos</span>
+        <strong id="total-concluidos">0</strong>
+    </div>
+
+    <div class="stat-card red">
+        <span>Cancelados</span>
+        <strong id="total-cancelados">0</strong>
+    </div>
+
+</section>
+
+
+<section class="grid">
+
+    <div class="card">
+
+        <div class="card-header">
+            <div>
+                <h2>Adicionar cliente</h2>
+                <p>Cadastre uma pessoa na fila de atendimento.</p>
+            </div>
+        </div>
+
+        <form id="form-cliente">
+
+            <div class="form-group">
+                <label for="nome">Nome *</label>
+
+                <input
+                    type="text"
+                    id="nome"
+                    name="nome"
+                    placeholder="Nome do cliente"
+                    required
+                    maxlength="120"
+                >
+            </div>
+
+            <div class="form-group">
+                <label for="telefone">Telefone</label>
+
+                <input
+                    type="text"
+                    id="telefone"
+                    name="telefone"
+                    placeholder="(00) 00000-0000"
+                    maxlength="30"
+                >
+            </div>
+
+            <div class="form-group">
+                <label for="prioridade">Prioridade</label>
+
+                <select id="prioridade" name="prioridade">
+                    <option value="Normal">Normal</option>
+                    <option value="Preferencial">Preferencial</option>
+                </select>
+            </div>
+
+            <button class="btn btn-primary" type="submit">
+                Adicionar à fila
+            </button>
+
+        </form>
+
+    </div>
+
+
+    <div class="card call-card">
+
+        <div class="card-header">
+            <div>
+                <h2>Controle de atendimento</h2>
+                <p>Chame o próximo cliente seguindo a fila.</p>
+            </div>
+        </div>
+
+        <button
+            id="btn-chamar"
+            class="btn btn-call"
+            type="button"
+        >
+            Chamar próximo
+        </button>
+
+        <div id="cliente-atual" class="cliente-atual">
+            <span class="empty">
+                Nenhum cliente em atendimento.
+            </span>
+        </div>
+
+    </div>
+
+</section>
+
+
+<section class="card">
+
+    <div class="card-header">
+        <div>
+            <h2>Fila de espera</h2>
+            <p>
+                Atualização automática a cada 3 segundos.
+            </p>
+        </div>
+
+        <span
+            id="status-atualizacao"
+            class="online"
+        >
+            ● Atualizando
+        </span>
+    </div>
+
+    <div class="table-wrapper">
+
+        <table>
+
+            <thead>
+                <tr>
+                    <th>Posição</th>
+                    <th>Cliente</th>
+                    <th>Telefone</th>
+                    <th>Prioridade</th>
+                    <th>Chegada</th>
+                    <th>Status</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+
+            <tbody id="fila-body">
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</section>
+
+<div id="toast" class="toast"></div>
+
+{% endblock %}

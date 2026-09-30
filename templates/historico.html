@@ -1,0 +1,187 @@
+{% extends "base.html" %}
+
+{% block title %}
+Histórico de Atendimentos
+{% endblock %}
+
+{% block content %}
+
+<section class="card">
+
+    <div class="card-header">
+
+        <div>
+            <h2>Histórico de atendimentos</h2>
+            <p>
+                Registro de atendimentos concluídos e cancelados.
+            </p>
+        </div>
+
+        <button
+            id="btn-limpar-historico"
+            class="btn btn-danger"
+            type="button"
+        >
+            Limpar histórico
+        </button>
+
+    </div>
+
+    <div class="table-wrapper">
+
+        <table>
+
+            <thead>
+                <tr>
+                    <th>Cliente</th>
+                    <th>Telefone</th>
+                    <th>Prioridade</th>
+                    <th>Chegada</th>
+                    <th>Chamada</th>
+                    <th>Finalização</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+
+            <tbody>
+
+            {% for atendimento in atendimentos %}
+
+                <tr>
+
+                    <td>
+                        <strong>
+                            {{ atendimento["nome"] }}
+                        </strong>
+                    </td>
+
+                    <td>
+                        {{ atendimento["telefone"] or "-" }}
+                    </td>
+
+                    <td>
+
+                        {% if atendimento["prioridade"] == "Preferencial" %}
+
+                            <span class="badge badge-priority">
+                                Preferencial
+                            </span>
+
+                        {% else %}
+
+                            <span class="badge">
+                                Normal
+                            </span>
+
+                        {% endif %}
+
+                    </td>
+
+                    <td>
+                        {{ formatar_data(atendimento["chegada"]) }}
+                    </td>
+
+                    <td>
+                        {{ formatar_data(atendimento["chamada"]) or "-" }}
+                    </td>
+
+                    <td>
+                        {% if atendimento["status"] == "Concluído" %}
+                            {{ formatar_data(atendimento["conclusao"]) }}
+                        {% else %}
+                            {{ formatar_data(atendimento["cancelamento"]) }}
+                        {% endif %}
+                    </td>
+
+                    <td>
+
+                        {% if atendimento["status"] == "Concluído" %}
+
+                            <span class="badge badge-success">
+                                Concluído
+                            </span>
+
+                        {% else %}
+
+                            <span class="badge badge-danger">
+                                Cancelado
+                            </span>
+
+                        {% endif %}
+
+                    </td>
+
+                </tr>
+
+            {% else %}
+
+                <tr>
+                    <td colspan="7" class="empty-table">
+                        Nenhum atendimento no histórico.
+                    </td>
+                </tr>
+
+            {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</section>
+
+{% endblock %}
+
+{% block scripts %}
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    const button = document.getElementById("btn-limpar-historico");
+
+    if (!button) {
+        return;
+    }
+
+    button.addEventListener("click", async function () {
+
+        const confirmar = confirm(
+            "Deseja realmente apagar todo o histórico?"
+        );
+
+        if (!confirmar) {
+            return;
+        }
+
+        try {
+
+            const response = await fetch(
+                "/api/limpar-historico",
+                {
+                    method: "DELETE"
+                }
+            );
+
+            const data = await response.json();
+
+            alert(data.mensagem);
+
+            if (data.sucesso) {
+                window.location.reload();
+            }
+
+        } catch (error) {
+
+            alert(
+                "Não foi possível limpar o histórico."
+            );
+
+        }
+
+    });
+
+});
+</script>
+
+{% endblock %}
